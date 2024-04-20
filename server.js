@@ -10,9 +10,11 @@ const pool = require('./db');
 //中间件
 app.use(express.json());
 app.use(cors());
-//app.use(body_Parser.urlencoded({ extended: true }));
 
+// 在 Node.js 中读取环境变量
+const SECRET_KEY = process.env.SECRET_KEY;
 
+//注册时从数据库找工程队
 app.get('/getEngineeringTeamName', (req, res) => {
   pool.query('SELECT Engineering_Team_NAME FROM engineering_team', (error, results) => {
     if (error) {
@@ -23,20 +25,56 @@ app.get('/getEngineeringTeamName', (req, res) => {
   });
 })
 
-// 添加数据的路由
-app.post('/addData', (req, res) => {
-  const { id, name, age } = req.body;
-  // 插入数据到数据库(测试代码)
-  pool.query('INSERT INTO student (id, name, age) VALUES (?, ?, ?)', [id, name, age], (error, results, fields) => {
-    if (error) {
-      console.error('添加数据时出错：', error);
-      res.status(500).json({ error: '添加数据时出错' });
-    } else {
-      res.json({ message: '数据已成功添加' });
-    }
-  });      
-      
-});
+
+
+//注册路由
+app.post('/register', (req, res) => {
+  // 从请求体中获取用户数据
+  const { username, password, name, sex, number, id, email, tel, en } = req.body;
+
+  // SQL 插入语句
+  const sqlInsert = 'INSERT INTO users (U_ACCOUNT, U_NUM, U_PASSWORD, U_NAME, U_SEX, U_ID, U_EMAIL, U_TEL, U_ET_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
+  // 插入数据到数据库
+  pool.query(sqlInsert, [username, number, password, name, sex, id, email, tel, en], (err, results) => {
+      if (err) {
+          // 如果是键值冲突
+          if (err.code === 'ER_DUP_ENTRY') {
+              res.status(409).send({ message: '账号已存在。' });
+          } else {
+              // 其他错误
+              res.status(500).send({ message: '注册失败。' });
+          }
+      } else {
+          // 成功插入
+          res.status(200).send({ message: '注册成功。' });
+      }
+  });
+});   //测试成功(^_^)
+
+
+
+//登录路由
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  // 应该使用哈希密码
+  const sql = `SELECT * FROM users WHERE U_ACCOUNT = ? AND U_PASSWORD = ?`;
+  
+  pool.query(sql, [username, password], (err, results) => {
+      if (err) {
+        // 发生错误时发送服务器错误响应
+        res.status(500).send({ message: '登录时发生错误。' });
+      } else if (results.length > 0) {
+        const user = results[0]; // 获取用户信息
+        const token = jwt.sign({ userId: user.U_ACCOUNT }, SECRET_KEY, { expiresIn: '1h' }); // 用用户的唯一标识创建 token
+        res.status(200).send({ message: '登录成功。', token: token });
+      } else {
+        // 未找到匹配的用户
+        res.status(401).send({ message: '用户名或密码错误。' });
+      }
+  });
+});   //待测试
 
 
   
