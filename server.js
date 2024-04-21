@@ -11,8 +11,8 @@ const pool = require('./db');
 app.use(express.json());
 app.use(cors());
 
-// 在 Node.js 中读取环境变量
-const SECRET_KEY = process.env.SECRET_KEY;
+// 在 Node.js 中读取环境变量//服务器环境变量有问题，直接显式调用SECRET_KEY
+const SECRET_KEY = "jF44FzpQEuaUOMmYXtWhblIm5yTuMOewmUvrok68bkle-jHTXs2Fr3ddKSqxfCENxZYLLTJSmRgPWOlkJSWClg";
 
 //注册时从数据库找工程队
 app.get('/getEngineeringTeamName', (req, res) => {
@@ -42,8 +42,8 @@ app.post('/register', (req, res) => {
           if (err.code === 'ER_DUP_ENTRY') {
               res.status(409).send({ message: '账号已存在。' });
           } else {
-              // 其他错误
-              res.status(500).send({ message: '注册失败。' });
+            // 其他错误
+            res.status(500).send({ message: '注册失败。' });
           }
       } else {
           // 成功插入
@@ -58,23 +58,27 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  // 应该使用哈希密码
-  const sql = `SELECT * FROM users WHERE U_ACCOUNT = ? AND U_PASSWORD = ?`;
+  // 
+  const sql = `SELECT compare_userpsw(?, ?) AS result`;
   
   pool.query(sql, [username, password], (err, results) => {
+
       if (err) {
         // 发生错误时发送服务器错误响应
         res.status(500).send({ message: '登录时发生错误。' });
-      } else if (results.length > 0) {
-        const user = results[0]; // 获取用户信息
-        const token = jwt.sign({ userId: user.U_ACCOUNT }, SECRET_KEY, { expiresIn: '1h' }); // 用用户的唯一标识创建 token
+      } else if (results.length > 0 && results[0].result === 1) {
+
+        const token = jwt.sign({ userId: username }, SECRET_KEY, { expiresIn: '1h' }); // 用用户的唯一标识创建 token
         res.status(200).send({ message: '登录成功。', token: token });
+        
       } else {
+
         // 未找到匹配的用户
         res.status(401).send({ message: '用户名或密码错误。' });
+
       }
   });
-});   //待测试
+});   //测试成功(^_^)
 
 
   
