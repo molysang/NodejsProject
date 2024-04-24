@@ -39,7 +39,7 @@ app.get('/getEngineeringTeamName', (req, res) => {
 
 //添加图片时从岩芯表获得岩芯信息
 app.get('/getStratumName', (req, res) => {
-	pool.query('SELECT Stratum_NAME FROM stratums', (error, results) => {
+	pool.query('SELECT Stratum_NAME, STRATUM_ID FROM stratums', (error, results) => {
 		if (error) {
 			console.error('添加查找时出错：', error);
 			return res.status(500).json({ error: '查找数据时出错' });
