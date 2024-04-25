@@ -137,10 +137,12 @@ app.post('/upload', (req, res) => {
 			return res.status(401).send({ message: 'Token验证失败' });
 		}   //验证失败
 		const account = decoded.userId; //获得userID，即数据库中的account字段
-		const sql = 'SELECT U_NUM FROM users WHERE user_id = ?';
+		const sql = 'SELECT U_NUM FROM users WHERE U_ACCOUNT = ?';
 		pool.query(sql, [account], (err, results) => {
 			if (err) {
+				console.error('错误信息：', err);
 				return res.status(500).send({ message: '查询数据库出错' });
+				
 			}
 			if (results.length > 0) {
 
@@ -148,10 +150,10 @@ app.post('/upload', (req, res) => {
 				const { IMAGE_ID, IMAGE_NAME, IMAGE_PATH, IMAGE_SID, IMA_START, IMA_END, IMA_DEPTH, S_TYPE } = req.body;
 				//获取body中的json信息
 
-				const sql1 = "INSERT INTO image_info (image_id, image_name, image_path, uploder_num, image_sid, ima_start, ima_end, ima_depth, s_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				const sql1 = "INSERT INTO image_info (image_name, image_path, uploader_num, image_sid, ima_start, ima_end, ima_depth, s_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 				//拼接出sql语句
-				pool.query(sql, [IMAGE_ID, IMAGE_NAME, IMAGE_PATH, userNum, IMAGE_SID, IMA_START, IMA_END, IMA_DEPTH, S_TYPE], (err, results) => {
+				pool.query(sql1, [IMAGE_NAME, IMAGE_PATH, userNum, IMAGE_SID, IMA_START, IMA_END, IMA_DEPTH, S_TYPE], (err, results) => {
 					if (err) {
 						console.error('插入错误:', err);
 						res.status(500).json({ error: '插入数据库发生错误' });
