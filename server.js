@@ -16,7 +16,7 @@ const SECRET_KEY = "jF44FzpQEuaUOMmYXtWhblIm5yTuMOewmUvrok68bkle-jHTXs2Fr3ddKSqx
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, '~/pictures')
+		cb(null, '/root/pictures')
 	},
 	filename: function (req, file, cb) {
 		cb(null, file.originalname)
@@ -155,9 +155,13 @@ app.post('/upload', (req, res) => {
 				//拼接出sql语句
 				pool.query(sql1, [IMAGE_NAME, IMAGE_PATH, userNum, IMAGE_SID, IMA_START, IMA_END, IMA_DEPTH, S_TYPE], (err, results) => {
 					if (err) {
-						console.error('插入错误:', err);
-						res.status(500).json({ error: '插入数据库发生错误' });
-						return;
+						// 如果是键值冲突
+						if (err.code === 'ER_DUP_ENTRY') {
+							res.status(409).send({ message: '图片名称已存在。' });
+						} else {
+							// 其他错误
+							res.status(500).send({ message: '数据库插入失败。' });
+						}
 					}
 
 					res.status(200).json({ message: '数据库插入成功' });
