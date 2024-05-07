@@ -155,7 +155,7 @@ app.post('/upload', (req, res) => {
 			if (results.length > 0) {
 
 				const userNum = results[0].U_NUM;
-				const { IMAGE_ID, IMAGE_NAME, IMAGE_PATH, IMAGE_SID, IMA_START, IMA_END, IMA_DEPTH, S_TYPE } = req.body;
+				const { IMAGE_NAME, IMAGE_PATH, IMAGE_SID, IMA_START, IMA_END, IMA_DEPTH, S_TYPE } = req.body;
 				//获取body中的json信息
 
 				const sql1 = "INSERT INTO image_info (image_name, image_path, uploader_num, image_sid, ima_start, ima_end, ima_depth, s_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
