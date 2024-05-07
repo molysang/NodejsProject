@@ -1,7 +1,7 @@
 //根据中间页面输入的结果生成的sql查询条件来查找图片
 const express = require('express');
 const router = express.Router();
-const pool = require('./db');
+const pool = require('../db');
 
 router.get('/getImageInfo', (req, res) => {
     
