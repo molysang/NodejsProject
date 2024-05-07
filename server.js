@@ -7,9 +7,17 @@ const cors = require('cors');
 const app = express();
 const pool = require('./db');
 
+
+//引入路由
+const getImageInfo = require('./routes/getImageInfo')
+
+
 //中间件
 app.use(express.json());
 app.use(cors());
+//使用路由
+app.use('/get', getImageInfo)
+
 
 // 在 Node.js 中读取环境变量//服务器环境变量有问题，直接显式调用SECRET_KEY
 const SECRET_KEY = "jF44FzpQEuaUOMmYXtWhblIm5yTuMOewmUvrok68bkle-jHTXs2Fr3ddKSqxfCENxZYLLTJSmRgPWOlkJSWClg";
@@ -124,7 +132,7 @@ app.get('/userinfo', (req, res) => {
 			}
 		});
 	});
-});
+});	//待测试
 
 //上传图片的功能实现
 app.post('/upload', (req, res) => {
@@ -174,7 +182,7 @@ app.post('/upload', (req, res) => {
 			}
 		});
 	});
-});   //待修改（未验证）
+});   //验证成功(^_^)
 
 
 
