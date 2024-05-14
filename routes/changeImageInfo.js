@@ -26,7 +26,7 @@ router.get('/showImageInfo', (req, res) => {
 
 })
 
-router.get('/updateImageInfo', (res, req) => {
+router.get('/updateImageInfo', (req, res) => {
 
     const uploadNum = req.query.uploadNum;
     const token = req.headers.authorization.split(' ')[1]; // 获得头部的token
