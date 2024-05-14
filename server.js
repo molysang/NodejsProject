@@ -11,7 +11,7 @@ const pool = require('./db');
 //引入路由
 const getImageInfo = require('./routes/getImageInfo')
 const loginRegister = require('./routes/LoginRegister')
-const upload = require('./routes/upload')
+const uploadImage = require('./routes/upload')
 
 
 //中间件
@@ -20,7 +20,7 @@ app.use(cors());
 //使用路由
 app.use('/get', getImageInfo)
 app.use('/post', loginRegister)
-app.use('/post', upload)
+app.use('/post', uploadImage)
 
 
 // 在 Node.js 中读取环境变量//服务器环境变量有问题，直接显式调用SECRET_KEY

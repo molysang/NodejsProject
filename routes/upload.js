@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const pool = require('./db');
+const pool = require('../db');
 
 
 //上传图片的功能实现
