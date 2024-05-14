@@ -53,4 +53,29 @@ router.get('/updateImageInfo', (req, res) => {
 
 })
 
+
+
+router.post('/updateSubmit', (req, res) => {
+
+    const { imageName, imageSid, imageStart, imageEnd, imageDepth, imageType, imageTime } = req.body;
+
+    const update = 'update image_info IMAGE_NAME = ?, IMAGE_SID = ?, IMA_START = ?, IMA_END = ?, IMA_DEPTH = ?, S_TYPE = ? where UPLOAD_TIME = ?'
+
+    pool.query(update, [imageName, imageSid, imageStart, imageEnd, imageDepth, imageType, imageTime], (err, results) => {
+
+        if (err) {
+            if (err.code === 'ER_DUP_ENTRY') {
+				res.status(409).send({ message: '图片名称已存在' });
+			} else {
+				// 其他错误
+				res.status(500).send({ message: '输入数据不符合规范' });
+			}
+        } else {
+            res.status(200).send({ message: '修改成功' })
+        }
+
+    })
+
+})
+
 module.exports = router
