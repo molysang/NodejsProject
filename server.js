@@ -12,15 +12,18 @@ const pool = require('./db');
 const getImageInfo = require('./routes/getImageInfo')
 const loginRegister = require('./routes/LoginRegister')
 const uploadImage = require('./routes/upload')
+const changeImage = require('./routes/changeImageInfo')
 
 
 //中间件
 app.use(express.json());
 app.use(cors());
+app.use('/images', express.static('/root/pictures'));
 //使用路由
 app.use('/get', getImageInfo)
 app.use('/post', loginRegister)
 app.use('/post', uploadImage)
+app.use('/change', changeImage)
 
 
 // 在 Node.js 中读取环境变量//服务器环境变量有问题，直接显式调用SECRET_KEY
