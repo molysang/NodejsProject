@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
+
+
 router.get('/getImageInfo', (req, res) => {
     
     let select = 'select Image_NAME, Stratum_NAME, Ima_START, Ima_END from ' +
