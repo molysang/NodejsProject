@@ -6,7 +6,7 @@ const pool = require('../db');
 router.get('/getImageInfo', (req, res) => {
     
     let select = 'select Image_NAME, Stratum_NAME, Ima_START, Ima_END from ' +
-                 'image_info i left join Stratums s ON i.image_SID = s.Stratum_ID '
+                 'image_info i left join Stratums s ON i.image_SID = s.Stratum_ID'
 
     let whereConditions = [];
     let queryParams = [];
