@@ -94,7 +94,7 @@ router.post('/updateSubmit', (req, res) => {
 
 })
 
-router.post('deleteImage', (req, res) => {
+router.post('/deleteImage', (req, res) => {
 
     const { imageName, uploadNum } = req.body;
 
@@ -136,7 +136,7 @@ router.post('deleteImage', (req, res) => {
                         console.log("文件成功删除");
                     });
 
-                    
+
                     res.status(200).send({ message: '删除成功' });
                 })
 
